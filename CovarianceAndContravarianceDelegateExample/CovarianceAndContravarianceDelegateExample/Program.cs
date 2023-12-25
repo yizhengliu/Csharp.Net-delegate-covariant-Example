@@ -25,6 +25,7 @@ namespace CovarianceAndContravarianceDelegateExample
             Console.WriteLine($"Objedct type: {evCar.GetType()}");
             Console.WriteLine($"Car details: {evCar.GetCarDetails()}");
 
+            //may not match
             LogICECarDetailsDel logICECarDetailsDel = LogCarDetails;
             logICECarDetailsDel(iceCar as ICECar);
             LogEVCarDetailsDel logEVCarDetailsDel = LogCarDetails;
