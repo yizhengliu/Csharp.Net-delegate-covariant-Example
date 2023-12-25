@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace CovarianceAndContravarianceDelegateExample
     internal class Program
     {
         delegate Car CarFactoryDel(int id, string name);
+        delegate void LogICECarDetailsDel(ICECar car);
+        delegate void LogEVCarDetailsDel(EVCar car);
         static void Main(string[] args)
         {
             CarFactoryDel carFactoryDel = CarFactory.ReturnICECar;
@@ -22,7 +25,34 @@ namespace CovarianceAndContravarianceDelegateExample
             Console.WriteLine($"Objedct type: {evCar.GetType()}");
             Console.WriteLine($"Car details: {evCar.GetCarDetails()}");
 
+            LogICECarDetailsDel logICECarDetailsDel = LogCarDetails;
+            logICECarDetailsDel(iceCar as ICECar);
+            LogEVCarDetailsDel logEVCarDetailsDel = LogCarDetails;
+            logEVCarDetailsDel(evCar as EVCar);
+
             Console.ReadKey();
+        }
+
+        static void LogCarDetails(Car car) 
+        {
+            if (car is ICECar)
+            {
+                using (StreamWriter sw = new StreamWriter((Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ICEDetails.txt")), true))
+                {
+                    sw.WriteLine($"Object Type: {car.GetType()}");
+                    sw.WriteLine($"Object Type: {car.GetCarDetails()}");
+
+                };
+            }
+            else if (car is EVCar) 
+            {
+                Console.WriteLine($"Object Type: {car.GetType()}");
+                Console.WriteLine($"Object Type: {car.GetCarDetails()}");
+            }
+            else 
+            {
+                throw new ArgumentException();
+            }
         }
 
         public static class CarFactory 
